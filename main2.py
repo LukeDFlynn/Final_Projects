@@ -4,9 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 from random import randint
-from gui import *
+from gui2 import *
 
-def scrapeMovie():
+def scrapeMovie(radButton):
 
     headers = {"Accept-Language": "en-US,en; q=0.5"}
 
@@ -56,6 +56,10 @@ def scrapeMovie():
         count = count + 1
 
     movie_list = pd.DataFrame({"Movie Name": movie_name, " Year of Release": year, " Watch Time": time, " Movie Rating": rating, " Metascore of Movie": metascore, " Votes": votes, "  Gross": gross})
+    if excel:
+        movie_list.to_excel("List of top 1000 Movies by IMDb.xlsx")
+    else:
+        movie_list.to_csv("List of top 1000 Movies by IMDb.csv")
 
 def scrapeBook():
 
@@ -63,6 +67,8 @@ def scrapeBook():
     num = 0
     for i in range(1, 51):
         url = f"https://books.toscrape.com/catalogue/page-{i}.html"
+
+        print(f"page {i} processing...")
 
         response = requests.get(url)
         response = response.content
@@ -81,6 +87,10 @@ def scrapeBook():
             books.append([title, price, star])
 
     books = pd.DataFrame(books, columns=['Title', 'Price', 'Star Rating'])
+    if csv:
+        books.to_excel("Books.xlsx")
+    else:
+        books.to_csv("Books.xlsx")
 
 
 def main():
@@ -91,4 +101,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
